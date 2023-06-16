@@ -1,6 +1,7 @@
 clear;
 addpath('./fun');
-Dataname='handwritten-5view';
+Dataname='neuroderisk';
+
 del=0.1;lambda=100000;beta=1;k=3;
 options=[];
 options.NeighborMode='KNN';
@@ -8,14 +9,25 @@ options.WeightMode='Binary';
 options.k=k;
 max_iter = 100;
 
-Datafold=[Dataname,'_del_',num2str(del),'.mat'];
+%Datafold=[Dataname,'_del_',num2str(del),'.mat'];
 load(Dataname);         % 一列一个样本
-load(Datafold);
+%load(Datafold);
+
+X = cell(5,1);
+X{1} = uca;
+X{2} = novartis;
+X{3} = sard;
+X{4} = unifi;
+X{5} = msd;
+
+Y = [Y_uca Y_novartis Y_sard Y_unifi Y_msd];
+Y;
+
 numClust=length(unique(Y));
 numSample=length(Y);
 numView=length(X);
 for f=1
-    fold = folds{f};
+    fold = folds;%{f};
     linshi_GG = 0;
     linshi_LS = 0;
     for iv = 1:length(X)
@@ -23,7 +35,7 @@ for f=1
         X1{iv} = NormalizeFea(X{iv},0);
         ind_1 = find(fold(:,iv) == 1);
         ind_0 = find(fold(:,iv) == 0);
-        X1{iv}(:,ind_0) = [];
+        %X1{iv}(:,ind_0) = [];
         % ------------- 构造缺失视角的索引矩阵 ----------- %
         linshi_W = diag(fold(:,iv));
         linshi_W(:,ind_0) = [];
@@ -51,4 +63,3 @@ std_nmi = std(res(:,2));
 mean_pur=mean(res(:,3));
 std_pur = std(res(:,3));
 disp(['acc=',num2str(mean_acc),'----nmi=',num2str(mean_nmi),'----pur=',num2str(mean_pur)]);
-
