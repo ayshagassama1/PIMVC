@@ -63,3 +63,5 @@ std_nmi = std(res(:,2));
 mean_pur=mean(res(:,3));
 std_pur = std(res(:,3));
 disp(['acc=',num2str(mean_acc),'----nmi=',num2str(mean_nmi),'----pur=',num2str(mean_pur)]);
+
+save("M.mat", "new_F");
